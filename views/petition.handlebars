@@ -1,19 +1,18 @@
-<header>Welcome to the Petition</header>
+<div class="main-content-container">
 
-{{#if err}}
-{{> errHandler}}
-{{/if}}
+    <h2>Welcome to the Petition</h2>
 
-<form name="user-data" action="/petition" method="POST">
-    <input type="text" name="first" placeholder="First Name">
-    <input type="text" name="last" placeholder="Last Name">
-    <div class="canvas-container">
-        <canvas class="signature-canvas" id="canv" width="300" height="100"></canvas>
-        <input type="hidden" name="signature">
-    </div>
-    <a href="/thanks"><button class="form-submit" type="submit">Submit!</button></a>
-</form>
+    {{#if err}}
+    {{> errHandler}}
+    {{/if}}
 
-
-
-<footer> ©️ Mohamad Soufi, Inc.2020</footer>
+    <form name="user-data" action="/petition" method="POST">
+        <input type="text" name="first" placeholder="First Name">
+        <input type="text" name="last" placeholder="Last Name">
+        <div class="canvas-container">
+            <canvas class="signature-canvas" id="canv" width="300" height="100"></canvas>
+            <input type="hidden" name="signature">
+        </div>
+        <a href="/thanks"><button class="form-submit" type="submit">Submit!</button></a>
+    </form>
+</div>

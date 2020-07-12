@@ -1,25 +1,126 @@
 body {
     margin: 0;
     height: 100%;
+    font-family: sans-serif;
 }
 
-.canvas-container {
+nav {
     display: flex;
-    /* justify-content: center; */
+    justify-content: center;
+    justify-content: start;
+    flex-direction: row;
+    background-color: rgba(88, 175, 161, 0.788);
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover {
+    color: white;
+}
+
+nav a,
+nav {
+    padding-left: 10px;
+    font-size: large;
+}
+
+/* petition page */
+.main-content-container {
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    flex-direction: column;
+    width: 40%;
+    text-align: center;
+}
+
+.main-content-container input {
+    border: none;
+    outline: none;
+    width: 90%;
+    border-bottom: 1px solid rgba(27, 25, 25, 0.397);
+    margin: 5px;
+}
+.main-content-container input:hover {
+    border: none;
+    outline: none;
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.658);
+
+    margin: 5px;
+}
+
+.canvas-container,
+form,
+.main-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .signature-canvas {
-    border: 1px black solid;
+    border: 1px rgba(0, 0, 0, 0.418) solid;
 }
 .form-submit {
-    text-decoration: bold;
+    border: none;
+    outline: none;
+    margin-top: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 30px;
+    background: linear-gradient(
+        71deg,
+        rgb(224, 217, 217) 10%,
+        rgba(67, 139, 127, 0.788) 95%,
+        rgba(43, 70, 65, 0.788) 100%
+    );
+}
+
+.form-submit:hover {
+    color: rgb(85, 81, 81);
 }
 
 .err-msg {
     color: red;
 }
 
+/* thanks page */
+
+.thanks-container,
+.thanks-container a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+.thanks-container a:hover {
+    color: white;
+    background-color: rgba(88, 175, 161, 0.788);
+}
+
+/* signers page*/
+.signers-list {
+    height: 80%;
+}
+.signers-list,
+.signers-list ul {
+    list-style-type: none;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
+    left: 0;
 }
