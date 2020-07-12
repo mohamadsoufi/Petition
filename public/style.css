@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+    height: 100%;
+}
+
+.canvas-container {
+    display: flex;
+    /* justify-content: center; */
+}
+
+.signature-canvas {
+    border: 1px black solid;
+}
+.form-submit {
+    text-decoration: bold;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}

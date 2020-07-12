@@ -1,0 +1,13 @@
+<header>Welcome to the Petition</header>
+
+<form name="user-data" action="/get-data" method="GET">
+    <input type="text" name="first" placeholder="First Name">
+    <input type="text" name="last" placeholder="Last Name">
+    <div class="canvas-container">
+        <canvas class="signature-canvas" id="canv" width="300" height="100"></canvas>
+        <input type="hidden" value="{{}}" name="signature">
+    </div>
+    <a href="/thanks"><button class="form-submit" type="submit">Submit!</button></a>
+</form>
+
+<footer> ©️ Mohamad Soufi, Inc.2020</footer>
