@@ -1,66 +1,81 @@
 const express = require("express");
 const app = express();
 const db = require("./db");
-// const canvas = require("./public/canvas");
+
+const bodyParser = require("body-parser");
+
 const port = 8080;
 
 app.use(express.static("public"));
-
+app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
 const hb = require("express-handlebars");
-const { runCLI } = require("jest");
+
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
 app.get("/petition", (req, res) => {
-    // console.log("req.query.first in get:", req.query.first);
-
     res.render("petition", {
         layout: "main",
-        // canvas,
     });
 });
 
-app.get("/get-data", (req, res) => {
-    let first = req.query.first;
-    let last = req.query.last;
-    let signature = req.query.signature;
-    // console.log("dataURL server :", dataURL);
-    console.log("first in get/data:", first);
-    console.log("last in get/data:", last);
-    console.log("signature in get/data:", signature);
-    db.getData(first, last, signature)
-        .then((results) => {
-            //results = data
-            // look for 'rows'
+app.post("/petition", (req, res) => {
+    let first = req.body.first;
+    let last = req.body.last;
+    let signature = req.body.signature;
+    // console.log("req.body.signature :", req.body.signature);
 
-            console.log("results :", results);
+    if (!first || !last || !signature) {
+        return res.render("petition", {
+            layout: "main",
+            err: "please fill out all the fields!",
+        });
+    }
+
+    db.addData(first, last, signature)
+        .then((results) => {
+            // any code I write here will run after addData has run
+            // console.log("results in addData :", results);
+            res.redirect("/thanks");
+        })
+        .catch((err) => {
+            console.log("err in POST /addData :", err);
+            res.render("petition", {
+                layout: "main",
+                err: "something went wrong",
+            });
+        });
+});
+
+app.get("/thanks", (req, res) => {
+    console.log("req.query :", req.query);
+
+    db.getData()
+        .then((results) => {
+            let data = results.rows;
+            res.render("thanks", {
+                layout: "main",
+                data,
+            });
         })
         .catch((err) => {
             console.log("err in GET /getData :", err);
         });
 });
 
-app.post("/add-data", (req, res) => {
-    let first = req.query.first;
-    let last = req.query.last;
-    let signature = req.query.signature;
-    console.log("req.query in post:", req.query);
-    db.addData(first, last, signature)
+app.get("/signers", (req, res) => {
+    db.getData()
         .then((results) => {
-            // any code I write here will run after addData has run
-            console.log("tesults in addData :", results);
+            let data = results.rows;
+            res.render("signers", {
+                layout: "main",
+                data,
+            });
         })
         .catch((err) => {
-            console.log("err in POST /addData :", err);
+            console.log("err in GET /getData :", err);
         });
-    res.redirect("/thanks");
-});
-
-app.get("/thanks", (req, res) => {
-    console.log("req.query.first in thanks:");
-
-    console.log("<h1>thanks</h1>");
-    res.send("<h1>thanks</h1>");
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

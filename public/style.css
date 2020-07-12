@@ -15,6 +15,10 @@ body {
     text-decoration: bold;
 }
 
+.err-msg {
+    color: red;
+}
+
 footer {
     position: absolute;
     bottom: 0;
