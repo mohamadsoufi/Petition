@@ -2,6 +2,7 @@ body {
     margin: 0;
     height: 100%;
     font-family: sans-serif;
+    background-color: rgba(88, 175, 160, 0.075);
 }
 
 nav {
@@ -90,6 +91,16 @@ form,
 }
 
 /* thanks page */
+.thanks-container {
+    height: 100vh;
+}
+.cur-first {
+    color: rgba(88, 175, 161, 0.788);
+    padding-left: 5px;
+}
+.thanks-name-container {
+    display: flex;
+}
 
 .thanks-container,
 .thanks-container a {
@@ -123,4 +134,5 @@ footer {
     position: relative;
     bottom: 0;
     left: 0;
+    background-color: rgba(88, 175, 161, 0.788);
 }
