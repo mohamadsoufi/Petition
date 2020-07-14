@@ -1,9 +1,14 @@
 const express = require("express");
 const app = express();
 const port = 8080;
+const bodyParser = require("body-parser");
+const hb = require("express-handlebars");
 const db = require("./db");
-var csurf = require("csurf");
+let csurf = require("csurf");
+const { hash, compare } = require("./bc");
+
 const cookieSession = require("cookie-session");
+
 app.use(
     cookieSession({
         secret: `I'm always angry.`,
@@ -11,7 +16,6 @@ app.use(
     })
 );
 
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static("public"));
@@ -27,10 +31,124 @@ app.use(express.static("public"));
 //     next();
 // });
 // app.use(bodyParser.json());
-const hb = require("express-handlebars");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
+
+//////// ROUTES ////////
+
+////////////////////////
+//////// REGISTER ////////
+////////////////////////
+
+app.get("/", (req, res) => {
+    res.redirect("/register");
+});
+
+app.get("/register", (req, res) => {
+    res.render("registration", {
+        layout: "main",
+    });
+});
+
+app.post("/register", (req, res) => {
+    const userFirstName = req.body.userFirstName;
+    const userLastName = req.body.userLastName;
+    const emailRegister = req.body.emailRegister;
+    const passwordRegister = req.body.passwordRegister;
+
+    if (
+        !userFirstName ||
+        !userLastName ||
+        !emailRegister ||
+        !passwordRegister
+    ) {
+        return res.render("registration", {
+            layout: "main",
+            err: "please fill out all the fields!",
+        });
+    }
+
+    hash(passwordRegister)
+        .then((hashedPw) => {
+            db.addUser(userFirstName, userLastName, emailRegister, hashedPw)
+                .then((results) => {
+                    // console.log("results in addUser :", results);
+                    // console.log("results.id :", results.id);
+                    let id = results.rows[0].id;
+                    req.session.userRegId = id;
+
+                    console.log("session  :", req.session);
+                    res.redirect("/petition");
+                })
+                .catch((err) => {
+                    console.log("err in POST /addUser :", err);
+                    res.render("registration", {
+                        layout: "main",
+                        err: "something went wrong",
+                    });
+                });
+        })
+        .catch((err) => {
+            console.log("error in hash in POST register", err);
+            res.render("registration", {
+                layout: "main",
+                err: "something went wrong",
+            });
+        });
+});
+
+///////////////////////
+//////// LOGIN ////////
+///////////////////////
+
+app.get("/login", (req, res) => {
+    res.render("login", {
+        layout: "main",
+    });
+});
+
+app.post("/login", (req, res) => {
+    let passwordLogin = req.body.passwordLogin;
+    let emailLogin = req.body.emailLogin;
+    let dbEmail;
+    let dbHashedPass;
+    let dbUserId;
+    db.getUserHash(emailLogin)
+        .then((results) => {
+            results.rows.forEach((e) => {
+                dbEmail = e.email;
+                dbHashedPass = e.password;
+                dbUserId = e.id;
+            });
+            if (dbEmail === emailLogin) {
+                console.log("dbUserId :", dbUserId);
+                compare(passwordLogin, dbHashedPass)
+                    .then((matchValue) => {
+                        req.session.dbUserId = dbUserId;
+                        res.redirect("/petition");
+                    })
+                    .catch((err) => {
+                        console.log("error in compare in POST login:", err);
+                        res.render("login", {
+                            layout: "main",
+                            err: "something went wrong",
+                        });
+                    });
+            }
+        })
+        .catch((err) => {
+            console.log("error in hash in POST register", err);
+            res.render("login", {
+                layout: "main",
+                err: "something went wrong",
+            });
+        });
+});
+
+//////////////////////////
+//////// petition ////////
+/////////////////////////
 
 app.get("/petition", (req, res) => {
     res.render("petition", {
@@ -39,38 +157,21 @@ app.get("/petition", (req, res) => {
 });
 
 app.post("/petition", (req, res) => {
-    let first = req.body.first;
-    let last = req.body.last;
     let signature = req.body.signature;
-    // let id = req.body.id;
-    // console.log("id in pet body:", id);
+    let userRegId = req.session.userRegId;
+    let dbUserId = req.session.dbUserId;
     // console.log("req.session.sigSession :", req.session);
-    // console.log("req.session.sigSession is working in petition ...");
-
-    // console.log("req.body.signature :", req.body.signature);
-
-    if (!first || !last || !signature) {
-        return res.render("petition", {
-            layout: "main",
-            err: "please fill out all the fields!",
-        });
-    }
-    req.session.sigSession = signature;
-    req.session.firstSession = first;
-
-    db.addData(first, last, signature)
+    db.addSig(signature, userRegId)
         .then((results) => {
-            // any code I write here will run after addData has run
-            // console.log("results in addData :", results);
-            // console.log("results.id :", results.id);
+            console.log("results in addSig :", results);
+
             let id = results.rows[0].id;
             req.session.sigSession = id;
-            req.session.firstSession = id;
-            // console.log("results :", results.rows[0].id);
+
             res.redirect("/thanks");
         })
         .catch((err) => {
-            console.log("err in POST /addData :", err);
+            console.log("err in POST /addSig :", err);
             res.render("petition", {
                 layout: "main",
                 err: "something went wrong",
@@ -78,40 +179,44 @@ app.post("/petition", (req, res) => {
         });
 });
 
-app.get("/thanks", (req, res) => {
-    db.getData()
-        .then((results) => {
-            console.log("results :", results);
-            let canvPicURL;
-            let curFirst;
-            results.rows.forEach((e) => {
-                let id = e.id;
+////////////////////////
+//////// THANKS ////////
+////////////////////////
 
-                if (req.session.firstSession === id && req.session.sigSession) {
+app.get("/thanks", (req, res) => {
+    db.getSig()
+        .then((results) => {
+            let canvPicURL;
+            results.rows.forEach((e) => {
+                let sigId = e.id;
+                console.log("sigId in the loop >>>>>>>>>>>>:", sigId);
+                console.log("req.session.sigSession :", req.session.sigSession);
+                if (req.session.sigSession === sigId) {
                     canvPicURL = e.signature;
-                    curFirst = e.first;
-                    console.log("canvPicURL>>>>>>>:", canvPicURL);
-                    // console.log("curFirst>>>> :", curFirst);
                 }
             });
-
-            console.log("req.session.firstSession in  gettttt :", req.session);
+            let curSigId = req.session.id;
+            console.log("req.session in  gettttt :", req.session.id); // id 21
             // console.log("req.session in thanks getDA:", req.session.sigSession);
-            let data = results.rows;
+            let data = results.rows[0];
+            console.log("data in getSig!????:", data);
             res.render("thanks", {
                 layout: "main",
                 data,
                 canvPicURL,
-                curFirst,
             });
         })
         .catch((err) => {
-            console.log("err in GET /getData :", err);
+            console.log("err in GET /getSig :", err);
         });
 });
 
+/////////////////////////
+//////// signers ////////
+////////////////////////
+
 app.get("/signers", (req, res) => {
-    db.getData()
+    db.getSig()
         .then((results) => {
             let data = results.rows;
             res.render("signers", {
@@ -120,7 +225,7 @@ app.get("/signers", (req, res) => {
             });
         })
         .catch((err) => {
-            console.log("err in GET /getData :", err);
+            console.log("err in GET /getSig :", err);
         });
 });
 

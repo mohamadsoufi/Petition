@@ -28,6 +28,48 @@ nav {
     font-size: large;
 }
 
+/* register */
+
+.registration-login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.registration-login-container input {
+    border: none;
+    outline: none;
+    width: 90%;
+    border-bottom: 1px solid rgba(27, 25, 25, 0.397);
+    margin: 5px;
+}
+.registration-login-container input:hover {
+    border: none;
+    outline: none;
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.658);
+
+    margin: 5px;
+}
+.registration-login-container button {
+    margin-top: 10px;
+}
+
+.if-member {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    margin: 10px;
+}
+
+.if-member h4 {
+    padding-right: 5px;
+    margin: 0;
+}
+
+/* login */
+
 /* petition page */
 .main-content-container {
     flex-direction: column;
@@ -52,7 +94,6 @@ form {
     border: none;
     outline: none;
     border-bottom: 1.5px solid rgba(0, 0, 0, 0.658);
-
     margin: 5px;
 }
 
@@ -67,7 +108,7 @@ form,
 .signature-canvas {
     border: 1px rgba(0, 0, 0, 0.418) solid;
 }
-.form-submit {
+button {
     border: none;
     outline: none;
     margin-top: 12px;
@@ -82,7 +123,7 @@ form,
     );
 }
 
-.form-submit:hover {
+button:hover {
     color: rgb(85, 81, 81);
 }
 
