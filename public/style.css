@@ -159,17 +159,20 @@ button:hover {
 
 /* signers page*/
 .signers-list {
-    height: 80%;
+    height: 100vh;
+    margin: 20px;
 }
 .signers-list,
 .signers-list ul {
     list-style-type: none;
     padding: 5px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+/* the ul is ganna touch the footer if it grows more!! */
 
 footer {
     position: relative;

@@ -8,7 +8,7 @@ CREATE TABLE users
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 
 -- here we are adding the foreign key (user_id)
@@ -16,3 +16,4 @@ CREATE TABLE users
 -- table signed the petition
 -- and which signature is theirs (acts as an identifier 
 -- btw the 2 tables!)
+
