@@ -1,16 +1,15 @@
 <div class="content-container">
-    {{#if err}}
-    {{> errHandler}}
-    {{/if}}
-    <form action="/register" method="post">
+
+    <form action="/profile/edit" method="POST">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
         <input type="text" name="userFirstName" id="userFirstName" placeholder="User First Name">
         <input type="text" name="userLastName" id="userLastName" placeholder="User Last Name">
         <input type="text" name="emailRegister" id="emailRegister" placeholder="Email">
         <input type="text" name="passwordRegister" id="passwordRegister" placeholder="Password">
-        <button id="registerBtn" type="submit">Sign Up</button>
-        <div class="if-member">
-            <h4>If you are already a member, please</h4><a href="/login">log in</a>
-        </div>
+        <input type="text" name="age" placeholder="Age">
+        <input type="text" name="city" placeholder="City">
+        <input type="text" name="url" placeholder="https://www.google.com/">
+        <button>Update</button>
     </form>
 </div>

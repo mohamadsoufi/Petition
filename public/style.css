@@ -30,7 +30,7 @@ nav {
 
 /* register */
 
-.registration-login-container {
+.content-container {
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -38,21 +38,21 @@ nav {
     flex-direction: column;
 }
 
-.registration-login-container input {
+.content-container input {
     border: none;
     outline: none;
     width: 90%;
     border-bottom: 1px solid rgba(27, 25, 25, 0.397);
     margin: 5px;
 }
-.registration-login-container input:hover {
+.content-container input:hover {
     border: none;
     outline: none;
     border-bottom: 1.5px solid rgba(0, 0, 0, 0.658);
 
     margin: 5px;
 }
-.registration-login-container button {
+.content-container button {
     margin-top: 10px;
 }
 
@@ -159,7 +159,7 @@ button:hover {
 
 /* signers page*/
 .signers-list {
-    height: 100vh;
+    height: 100%;
     margin: 20px;
 }
 .signers-list,

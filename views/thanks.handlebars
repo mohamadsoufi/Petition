@@ -6,7 +6,15 @@
     </div>
     <img src="{{canvPicURL}}" alt="canvPicURL">
 
-    <h3>{{data.length}} have signed. Next goal: 50,000</h3>
+    <h3>{{signersNum}} have signed. Next goal: 50,000</h3>
+
+    <a href="/thanks/delete">
+        <form action="/thanks/delete" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button>Delete your signature</button>
+        </form>
+    </a>
+    <a href="/profile/edit">Edit your profile</a>
 
     <a href="/signers">Check list of signers!</a>
 </div>

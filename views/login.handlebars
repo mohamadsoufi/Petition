@@ -1,9 +1,10 @@
-<div class="registration-login-container">
+<div class="content-container">
     {{#if err}}
     {{> errHandler}}
     {{/if}}
     <h3>Please log in.</h3>
     <form action="/login" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <input type="text" name="emailLogin" id="emailLogin" placeholder="Email">
         <input type="text" name="passwordLogin" id="passwordRegister" placeholder="Password">
         <button id="loginBtn" type="submit">Log In</button>

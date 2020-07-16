@@ -150,6 +150,14 @@ app.post("/profile", function (req, res) {
     }
 });
 
+app.get('/profile/edit', (req, res) => {
+    res.send('GET request to the homepage')
+})
+
+app.post('/profile/edit', function (req, res) {
+    res.send('POST request to the homepage')
+})
+
 ///////////////////////
 //////// LOGIN ////////
 ///////////////////////
@@ -217,6 +225,7 @@ app.get("/petition", (req, res) => {
 app.post("/petition", (req, res) => {
     let signature = req.body.signature;
     let userId = req.session.userId;
+    console.log('userId :', userId);
 
     db.addSig(signature, userId)
         .then((results) => {
@@ -234,41 +243,32 @@ app.post("/petition", (req, res) => {
             });
         });
 });
-// TOFIX: //////////////////////////////////////////////////////////////////////////////////
 ////////////////////////
-//////// THANKS ////////
+//////// THANKS/SIGNATURE ////////
 ////////////////////////
 
 app.get("/thanks", (req, res) => {
-    db.getSig()
+    db.getSig(req.session.userId)
         .then((results) => {
-            let canvPicURL;
-            // TODO:
-            //I need to drop the signers table !!
-            // user_id: 33
-            //  crSigId: 7
-            results.rows.forEach((e) => {
-                let sigId = e.id;
-                if (req.session.sigSessionId === sigId) {
-                    canvPicURL = e.signature;
-                }
-            });
+            let canvPicURL = results.rows[0].signature;
             let curSigId = req.session.sigSessionId;
-            // console.log("curSigId in  getSig >>> :", curSigId); 
-
-            let data = results.rows;
-            // console.log("data in getSig!", data);
-            // console.log("results.rows :", results.rows);
-            res.render("thanks", {
-                layout: "main",
-                data,
-                canvPicURL,
-            });
+            db.getNum().then((results) => {
+                let signersNum = results.rows[0].count
+                res.render("thanks", {
+                    layout: "main",
+                    signersNum,
+                    canvPicURL,
+                });
+            })
         })
         .catch((err) => {
             console.log("err in GET /getSig :", err);
         });
 });
+
+app.post('/thanks/delete', function (req, res) {
+    res.send('POST request to the homepage')
+})
 
 /////////////////////////
 //////// signers ////////
@@ -278,6 +278,7 @@ app.get("/signers", (req, res) => {
     db.getSigners()
         .then((results) => {
             let data = results.rows;
+            console.log('data signers :', data);
             res.render("signers", {
                 layout: "main",
                 data,
@@ -290,6 +291,7 @@ app.get("/signers", (req, res) => {
 });
 
 app.get("/signers/:city", (req, res) => {
+
     let city = req.params.city
     db.getSignersInCity(city).then((results) => {
         console.log('results in signers city:', results);
@@ -301,10 +303,10 @@ app.get("/signers/:city", (req, res) => {
             cityTemplate: true
 
 
-        }).catch((err) => {
-            console.log("err in GET /get city :", err);
-        });
-    })
+        })
+    }).catch((err) => {
+        console.log("err in GET /get city :", err);
+    });
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));

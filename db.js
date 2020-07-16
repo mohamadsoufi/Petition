@@ -1,9 +1,11 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/caper-petition");
+const db = spicedPg(process.env.DATABASE_URL || "postgres:postgres:postgres@localhost:5432/caper-petition");
 
 module.exports.addSig = (signature, userId) => {
     let q =
-        "INSERT INTO signatures (signature, user_id) VALUES ($1, $2) RETURNING id";
+        `INSERT INTO signatures (signature, user_id)
+         VALUES ($1, $2)
+          RETURNING id`;
 
     let params = [signature, userId];
     return db.query(q, params);
@@ -11,7 +13,13 @@ module.exports.addSig = (signature, userId) => {
 
 module.exports.getSig = function (id) {
     //q for query
-    let q = "SELECT * FROM signatures";
+    let q = "SELECT signature FROM signatures WHERE signatures.user_id = $1";
+    return db.query(q, [id]);
+};
+
+module.exports.getNum = function () {
+    //q for query
+    let q = "SELECT COUNT(*) FROM signatures ";
     return db.query(q);
 };
 
@@ -39,6 +47,12 @@ module.exports.addProfile = (age, city, url, userId) => {
     return db.query(q, params);
 };
 
+
+
+// INSERT INTO actors(name, oscars, age)
+// VALUES('Ingrid Bergman', 4, 67)
+// ON CONFLICT(name)
+// DO UPDATE SET age = 67, oscars = 4;
 
 module.exports.getSigners = function () {
     let q =

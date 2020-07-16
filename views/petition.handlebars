@@ -11,6 +11,7 @@
         <div class="canvas-container">
             <canvas class="signature-canvas" id="canv" width="300" height="100"></canvas>
             <input type="hidden" name="signature">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
         </div>
         <a href="/thanks"><button class="form-submit" type="submit">Submit!</button></a>
     </form>
