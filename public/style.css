@@ -7,9 +7,9 @@ body {
 
 nav {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     justify-content: start;
-    flex-direction: row;
+    flex-direction: row-reverse;
     background-color: rgba(88, 175, 161, 0.788);
 }
 
@@ -159,7 +159,7 @@ button:hover {
 
 /* signers page*/
 .signers-list {
-    height: 100%;
+    height: 100vh;
     margin: 20px;
 }
 .signers-list,

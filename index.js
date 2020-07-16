@@ -111,17 +111,20 @@ app.post("/profile", function (req, res) {
     let age = req.body.age;
     let url = req.body.url;
     let cityLower = req.body.city.toLowerCase();
-
+    if (!age && !url && !cityLower) {
+        res.redirect("/petition")
+    }
     if (
         url.startsWith("https://") ||
         url.startsWith("http://") ||
-        url.startsWith("//")
+        url.startsWith("//") ||
+        !url
     ) {
         // console.log("req.body :", req.body);
         // console.log("url :", url);
         let userId = req.session.userId;
         db.addProfile(age, cityLower, url, userId)
-            .then((results) => {
+            .then(() => {
                 // console.log("results in add profile :", results);
                 res.redirect("/petition");
             })
@@ -134,24 +137,31 @@ app.post("/profile", function (req, res) {
             });
     } else {
         // check here later <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        url.prepend("http://");
-        db.addProfile(age, cityLower, url)
-            .then((results) => {
-                console.log("results without http in add profile :", results);
-                res.redirect("/petition");
-            })
-            .catch((err) => {
-                console.log("error in profile in POST", err);
-                res.render("profile", {
-                    layout: "main",
-                    err: "something went wrong",
+        if (url) {
+
+            url.prepend("http://");
+            db.addProfile(age, cityLower, url, userId)
+                .then((results) => {
+                    console.log("results without http in add profile :", results);
+                    res.redirect("/petition");
+                })
+                .catch((err) => {
+                    console.log("error in profile in POST", err);
+                    res.render("profile", {
+                        layout: "main",
+                        err: "something went wrong",
+                    });
                 });
-            });
+        }
     }
 });
 
 app.get('/profile/edit', (req, res) => {
-    res.send('GET request to the homepage')
+    if (req.session.userId) {
+        res.send('GET request to the homepage')
+    } else {
+        res.render('login')
+    }
 })
 
 app.post('/profile/edit', function (req, res) {
@@ -171,13 +181,15 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     let passwordLogin = req.body.passwordLogin;
     let emailLogin = req.body.emailLogin;
-
+    // console.log('paswordLogin :', passwordLogin);
+    // console.log('emailLogin :', emailLogin);
     db.getUserIdSigId(emailLogin)
         .then((result) => {
             let userId = result.rows[0].userid
             let signatureId = result.rows[0].signatureid
-            let pw = result.row[0].password
+            let pw = result.rows[0].password
             console.log('results in user id sig id:', result);
+            console.log('results userId in get user idsig:', userId);
 
             req.session.userId = userId;
             req.session.signatureId = signatureId
@@ -186,12 +198,17 @@ app.post("/login", (req, res) => {
             compare(passwordLogin, pw)
                 .then((matchValue) => {
                     if (matchValue) {
+                        console.log('req.session after login :', req.session);
+                        if (req.session.signatureId) {
+                            res.redirect("/thanks")
+                        } else {
 
-                        res.redirect("/petition");
+                            res.redirect("/petition");
+                        }
                     } else {
                         res.render("login", {
                             layout: "main",
-                            err: "something went wrong",
+                            err: "something went wrong, please try again!",
                         });
                     }
                 })
@@ -213,7 +230,7 @@ app.post("/login", (req, res) => {
 /////////////////////////
 
 app.get("/petition", (req, res) => {
-    if (req.session.signed) {
+    if (req.session.signatureId) {
         res.redirect('/signers')
     } else {
         res.render("petition", {
@@ -225,23 +242,28 @@ app.get("/petition", (req, res) => {
 app.post("/petition", (req, res) => {
     let signature = req.body.signature;
     let userId = req.session.userId;
-    console.log('userId :', userId);
 
-    db.addSig(signature, userId)
-        .then((results) => {
-            let id = results.rows[0].id;
-            req.session.sigSessionId = id;
-            req.session.signed = true
+    if (!req.session.signatureId) {
 
-            res.redirect("/thanks");
-        })
-        .catch((err) => {
-            console.log("err in POST /addSig :", err);
-            res.render("petition", {
-                layout: "main",
-                err: "something went wrong",
+        db.addSig(signature, userId)
+            .then((results) => {
+                let id = results.rows[0].id;
+                req.session.sigSessionId = id;
+                req.session.signed = true
+                //come back here later!
+
+                res.redirect("/thanks");
+            })
+            .catch((err) => {
+                console.log("err in POST /addSig :", err);
+                res.render("petition", {
+                    layout: "main",
+                    err: "something went wrong",
+                });
             });
-        });
+    } else {
+        res.redirect('/thanks')
+    }
 });
 ////////////////////////
 //////// THANKS/SIGNATURE ////////
@@ -251,7 +273,7 @@ app.get("/thanks", (req, res) => {
     db.getSig(req.session.userId)
         .then((results) => {
             let canvPicURL = results.rows[0].signature;
-            let curSigId = req.session.sigSessionId;
+            // let curSigId = req.session.sigSessionId;
             db.getNum().then((results) => {
                 let signersNum = results.rows[0].count
                 res.render("thanks", {
@@ -275,10 +297,11 @@ app.post('/thanks/delete', function (req, res) {
 ////////////////////////
 
 app.get("/signers", (req, res) => {
+
     db.getSigners()
         .then((results) => {
             let data = results.rows;
-            console.log('data signers :', data);
+            // console.log('data signers :', data);
             res.render("signers", {
                 layout: "main",
                 data,
@@ -288,6 +311,7 @@ app.get("/signers", (req, res) => {
         .catch((err) => {
             console.log("err in GET /get signers :", err);
         });
+
 });
 
 app.get("/signers/:city", (req, res) => {
@@ -301,12 +325,16 @@ app.get("/signers/:city", (req, res) => {
             layout: "main",
             data,
             cityTemplate: true
-
-
         })
     }).catch((err) => {
         console.log("err in GET /get city :", err);
     });
 });
+
+app.get('/logout', function (req, res) {
+    req.session = null;
+
+    res.redirect('/login')
+})
 
 app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));

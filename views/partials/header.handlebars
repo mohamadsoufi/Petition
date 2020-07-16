@@ -1,8 +1,17 @@
 <nav>
+    {{#if notSigned}}
     <div>
-        <a class="symbol" href="/petition">The Petition</a>
+        <a class="symbol" href="/petition">Sign</a>
+    </div>
+    {{else}}
+    <div>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+    <div>
+        <a class="edit" href="/profile/edit">Edit</a>
     </div>
     <div>
         <a class="signers" href="/signers">Signers</a>
     </div>
+    {{/if}}
 </nav>
