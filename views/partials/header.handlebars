@@ -1,17 +1,27 @@
 <nav>
-    {{#if notSigned}}
-    <div>
-        <a class="symbol" href="/petition">Sign</a>
+
+    <div class="right-side">
+
+        <div>
+            <a class="symbol" href="/petition">Sign the Petition</a>
+        </div>
+
+        <div>
+            <a class="logout" href="/logout">Logout</a>
+        </div>
+        <div>
+            <a class="edit" href="/profile/edit">Edit</a>
+        </div>
     </div>
-    {{else}}
-    <div>
-        <a class="logout" href="/logout">Logout</a>
+    <div class="left-side">
+        <div class="welcome-name">
+            <a class="signer" href="/thanks">
+                <span class="welcome">Welcome back</span> <span class="name">{{name}}</span>
+            </a>
+        </div>
+        <div>
+            <a class="signers" href="/signers">Signers</a>
+        </div>
     </div>
-    <div>
-        <a class="edit" href="/profile/edit">Edit</a>
-    </div>
-    <div>
-        <a class="signers" href="/signers">Signers</a>
-    </div>
-    {{/if}}
+
 </nav>

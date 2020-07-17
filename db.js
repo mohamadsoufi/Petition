@@ -71,12 +71,27 @@ module.exports.getProfileData = function (userId) {
 
 module.exports.updateProfile = function (age, city, url, userId) {
     let q = `INSERT INTO user_profiles (age, city, url, user_id )
-             VALUES($1,$2,$3,$4)
+             VALUES($1, $2, $3, $4)
              ON CONFLICT(user_id)
              DO UPDATE SET age = $1, city = $2, url = $3`;
     let params = [age, city, url, userId]
-    return db.query(q)
+    return db.query(q, params)
+}
 
+module.exports.updateUsers = function (first, last, email, userId) {
+    let q = `UPDATE users 
+            SET first =$1, last =$2, email = $3
+             WHERE id = $4 `;
+    let params = [first, last, email, userId]
+    return db.query(q, params)
+}
+
+module.exports.updatePw = function (hashedPw, userId) {
+    let q = `UPDATE users 
+            SET password =$1
+             WHERE id = $2 `;
+    let params = [hashedPw, userId]
+    return db.query(q, params)
 }
 
 module.exports.getSigners = function () {
@@ -103,4 +118,9 @@ module.exports.getSignersInCity = function (city) {
     return db.query(q, params);
 };
 
-
+module.exports.deleteSig = function (sigId) {
+    let q = `DELETE FROM signatures 
+             WHERE signature.user_id = $1 `;
+    let params = [sigId]
+    return db.query(q, params)
+}
