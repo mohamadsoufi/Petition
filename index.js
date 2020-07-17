@@ -110,6 +110,7 @@ app.get("/profile", (req, res) => {
 app.post("/profile", function (req, res) {
     let age = req.body.age;
     let url = req.body.url;
+    console.log('url in profile:', url);
     let cityLower = req.body.city.toLowerCase();
     if (!age && !url && !cityLower) {
         res.redirect("/petition")
@@ -124,8 +125,8 @@ app.post("/profile", function (req, res) {
         // console.log("url :", url);
         let userId = req.session.userId;
         db.addProfile(age, cityLower, url, userId)
-            .then(() => {
-                // console.log("results in add profile :", results);
+            .then((results) => {
+                console.log("results in add profile :", results);
                 res.redirect("/petition");
             })
             .catch((err) => {
@@ -158,13 +159,39 @@ app.post("/profile", function (req, res) {
 
 app.get('/profile/edit', (req, res) => {
     if (req.session.userId) {
-        res.send('GET request to the homepage')
+        db.getProfileData(req.session.userId).then((results) => {
+            // console.log('results in edit :', results);
+            let first = results.rows[0].first
+            let last = results.rows[0].last
+            let age = results.rows[0].age
+            let city = results.rows[0].city
+            let url = results.rows[0].url
+            let email = results.rows[0].email
+            res.render("editprofile", {
+                layout: "main",
+                first,
+                last,
+                age,
+                city,
+                url,
+                email
+            })
+
+        })
     } else {
         res.render('login')
     }
 })
 
 app.post('/profile/edit', function (req, res) {
+    console.log('req.body :', req.body);
+    let first = req.body.first
+    let last = req.body.last
+    let age = req.body.age
+    let city = req.body.city
+    let url = req.body.url
+    let email = req.body.email
+    console.log('age :', age);
     res.send('POST request to the homepage')
 })
 

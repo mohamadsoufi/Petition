@@ -37,12 +37,12 @@ module.exports.addUser = (first, last, email, password) => {
 module.exports.getUserIdSigId = function (emailLogin) {
     let q =
         `SELECT users.password AS password,
-         users.id AS userId,
-          signatures.user_id AS signatureId
-           FROM users 
-           LEFT JOIN signatures 
-           ON users.id = signatures.user_id 
-           WHERE users.email = $1`;
+        users.id AS userId,
+        signatures.user_id AS signatureId
+        FROM users 
+        LEFT JOIN signatures 
+        ON users.id = signatures.user_id 
+        WHERE users.email = $1`;
 
     let params = [emailLogin];
     return db.query(q, params);
@@ -51,23 +51,38 @@ module.exports.getUserIdSigId = function (emailLogin) {
 module.exports.addProfile = (age, city, url, userId) => {
     let q =
         `INSERT INTO user_profiles (age, city, url, user_id) 
-        VALUES ($1, $2, $3, $4) 
-        RETURNING id`;
+         VALUES ($1, $2, $3, $4)`;
 
     let params = [+age || null, city, url, userId];
     return db.query(q, params);
 };
 
 
+module.exports.getProfileData = function (userId) {
+    let q = `SELECT first, last, age, city, url ,email
+             FROM users
+             LEFT JOIN user_profiles
+             ON users.id = user_profiles.user_id
+             WHERE users.id = $1`;
+    let params = [userId]
+    return db.query(q, params)
 
-// INSERT INTO actors(name, oscars, age)
-// VALUES('Ingrid Bergman', 4, 67)
-// ON CONFLICT(name)
-// DO UPDATE SET age = 67, oscars = 4;
+}
+
+module.exports.updateProfile = function (age, city, url, userId) {
+    let q = `INSERT INTO user_profiles (age, city, url, user_id )
+             VALUES($1,$2,$3,$4)
+             ON CONFLICT(user_id)
+             DO UPDATE SET age = $1, city = $2, url = $3`;
+    let params = [age, city, url, userId]
+    return db.query(q)
+
+}
 
 module.exports.getSigners = function () {
     let q =
-        `SELECT first, last, age, city, url FROM users 
+        `SELECT first, last, age, city, url
+        FROM users 
         LEFT JOIN signatures 
         ON users.id = signatures.user_id 
         LEFT JOIN user_profiles 

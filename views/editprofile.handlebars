@@ -3,13 +3,13 @@
     <form action="/profile/edit" method="POST">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
-        <input type="text" name="userFirstName" id="userFirstName" placeholder="User First Name">
-        <input type="text" name="userLastName" id="userLastName" placeholder="User Last Name">
-        <input type="text" name="emailRegister" id="emailRegister" placeholder="Email">
+        <input type="text" value="{{first}}" name="userFirstName" id="userFirstName" placeholder="User First Name">
+        <input type="text" value="{{last}}" name="userLastName" id="userLastName" placeholder="User Last Name">
+        <input type="text" value="{{email}}" name="emailRegister" id="emailRegister" placeholder="Email">
         <input type="text" name="passwordRegister" id="passwordRegister" placeholder="Password">
-        <input type="text" name="age" placeholder="Age">
-        <input type="text" name="city" placeholder="City">
-        <input type="text" name="url" placeholder="https://www.google.com/">
+        <input type="text" value="{{age}}" name="age" placeholder="Age">
+        <input type="text" value="{{city}}" name="city" placeholder="City">
+        <input type="text" value="{{url}}" name="url" placeholder="https://www.google.com/">
         <button>Update</button>
     </form>
 </div>
