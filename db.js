@@ -120,7 +120,7 @@ module.exports.getSignersInCity = function (city) {
 
 module.exports.deleteSig = function (sigId) {
     let q = `DELETE FROM signatures 
-             WHERE signature.user_id = $1 `;
+             WHERE signatures.user_id = $1 `;
     let params = [sigId]
     return db.query(q, params)
 }

@@ -1,22 +1,30 @@
-{{#if cityTemplate}}
 <div class="signers-list">
     <h2>The {{data.length}} participants </h2>
     <ul>
         {{#data}}
-        <li><a href="{{url}}">{{first}} {{last}}</a>{{age}} </li>
+        <li>
+
+            {{#if url}}
+
+            <a href="{{url}}">{{first}} {{last}}</a>
+            {{else}}
+
+            {{first}} {{last}}
+            {{/if}}
+
+            {{#if age}}
+            | {{age}}
+            {{/if}}
+
+            {{#if ../signersView}}
+
+            <a href="/signers/{{city}}">{{city}}</a>
+
+            {{/if}}
+
+        </li>
+
         {{/data}}
+
     </ul>
 </div>
-{{/if}}
-
-{{#if signers}}
-<div class="signers-list">
-    <h2>The {{data.length}} participants </h2>
-    <ul>
-        {{#data}}
-        <li><a href="{{url}}">{{first}} {{last}}</a>{{age}} <a href="/signers/{{city}}">{{city}}</a></li>
-        {{/data}}
-
-    </ul>
-</div>
-{{/if}}

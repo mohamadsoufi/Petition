@@ -4,6 +4,7 @@
     {{/if}}
     <h3>Now please tell just a little bit more about yourself.</h3>
     <form action="/profile" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <input type="text" name="age" placeholder="Age">
         <input type="text" name="city" placeholder="City">
         <input type="text" name="url" placeholder="https://www.google.com/">

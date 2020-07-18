@@ -1,3 +1,4 @@
+
 exports.requireLoggedOutUser = function requireLoggedOutUser(req, res, next) {
     // if logged in
     if (req.session.userId) {
@@ -33,3 +34,4 @@ exports.requireNoSignature = function requireNoSignature(req, res, next) {
         next();
     }
 };
+

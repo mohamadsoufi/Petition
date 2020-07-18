@@ -9,7 +9,8 @@ const {
     requireLoggedOutUser,
     requireLoggedInUser,
     requireSignature,
-    requireNoSignature
+    requireNoSignature,
+
 } = require("./middleware");
 const { hash, compare } = require("./bc");
 
@@ -57,7 +58,7 @@ app.get("/register", requireLoggedOutUser, (req, res) => {
     });
 });
 
-app.post("/register", requireLoggedOutUser, (req, res) => {
+app.post("/register", requireLoggedOutUser, requireNoSignature, (req, res) => {
     const userFirstName = req.body.userFirstName;
     const userLastName = req.body.userLastName;
     const emailRegister = req.body.emailRegister;
@@ -88,10 +89,7 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
                 })
                 .catch((err) => {
                     console.log("err in POST /addUser :", err);
-                    res.render("registration", {
-                        layout: "main",
-                        err: "something went wrong",
-                    });
+                    res.redirect('/register')
                 });
         })
         .catch((err) => {
@@ -237,15 +235,12 @@ app.get("/login", requireLoggedOutUser, (req, res) => {
 app.post("/login", requireLoggedOutUser, (req, res) => {
     let passwordLogin = req.body.passwordLogin;
     let emailLogin = req.body.emailLogin;
-    // console.log('paswordLogin :', passwordLogin);
-    // console.log('emailLogin :', emailLogin);
+
     db.getUserIdSigId(emailLogin)
         .then((result) => {
             let userId = result.rows[0].userid
             let signatureId = result.rows[0].signatureid
             let pw = result.rows[0].password
-            // console.log('results in user id sig id:', result);
-            // console.log('results userId in get user idsig:', userId);
 
             req.session.userId = userId;
             req.session.signatureId = signatureId
@@ -284,6 +279,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
 app.get("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     res.render("petition", {
         layout: "main",
+        petition: true
     });
 });
 
@@ -294,7 +290,7 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     db.addSig(signature, userId)
         .then((results) => {
             let id = results.rows[0].id;
-            req.session.sigSessionId = id;
+            req.session.signatureId = id;
             req.session.signed = true
             //come back here later!
 
@@ -314,10 +310,10 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
 //////////////////////////////////
 
 app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
-    let name
+    let first
     db.getProfileData(req.session.userId).then((results) => {
 
-        name = results.rows[0].first
+        first = results.rows[0].first
     }).catch((err) => {
         console.log("err in GET /get profile data in thanks :", err);
     });
@@ -330,7 +326,7 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
                     layout: "main",
                     signersNum,
                     canvPicURL,
-                    name
+                    first
                 });
             })
         })
@@ -340,12 +336,12 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
 });
 
 app.post('/thanks/delete', requireLoggedInUser, requireSignature, function (req, res) {
-    // db.deleteSig(req.session.userId).then(() => {
-    //     req.session.signatureId = null
-    //     res.redirect('/petition')
-    // })
+    db.deleteSig(req.session.userId).then(() => {
+        req.session.signatureId = null
+        res.redirect('/petition')
+    })
 
-    res.send('POST request to delete')
+    // res.send('POST request to delete')
 
 })
 
@@ -354,34 +350,40 @@ app.post('/thanks/delete', requireLoggedInUser, requireSignature, function (req,
 ////////////////////////
 
 app.get("/signers", requireLoggedInUser, (req, res) => {
-
-    db.getSigners()
-        .then((results) => {
-            let data = results.rows;
-            // console.log('data signers :', data);
-            res.render("signers", {
-                layout: "main",
-                data,
-                signers: true
-            });
-        })
+    db.getProfileData(req.session.userId).then((results) => {
+        first = results.rows[0].first
+        db.getSigners()
+            .then((results) => {
+                let data = results.rows;
+                // console.log('data signers :', data);
+                res.render("signers", {
+                    layout: "main",
+                    data,
+                    first,
+                    signersView: true
+                });
+            })
+    })
         .catch((err) => {
             console.log("err in GET /get signers :", err);
         });
+
 
 });
 
 app.get("/signers/:city", requireLoggedInUser, (req, res) => {
 
     let city = req.params.city
-    db.getSignersInCity(city).then((results) => {
-        // console.log('results in signers city:', results);
+    db.getProfileData(req.session.userId).then((results) => {
 
-        let data = results.rows;
-        res.render("signers", {
-            layout: "main",
-            data,
-            cityTemplate: true
+        first = results.rows[0].first
+        db.getSignersInCity(city).then((results) => {
+            let data = results.rows;
+            res.render("signers", {
+                layout: "main",
+                data,
+                first,
+            })
         })
     }).catch((err) => {
         console.log("err in GET /get city :", err);

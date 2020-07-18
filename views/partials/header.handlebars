@@ -3,20 +3,26 @@
     <div class="right-side">
 
         <div>
-            <a class="symbol" href="/petition">Sign the Petition</a>
+            <a class="symbol" href="/petition">The Petition</a>
         </div>
-
+        {{#if first}}
         <div>
             <a class="logout" href="/logout">Logout</a>
         </div>
         <div>
             <a class="edit" href="/profile/edit">Edit</a>
         </div>
+        {{else}}
+        <div>
+            <a class="edit" href="/profile/edit">Sign</a>
+        </div>
+        {{/if}}
+
     </div>
     <div class="left-side">
         <div class="welcome-name">
             <a class="signer" href="/thanks">
-                <span class="welcome">Welcome back</span> <span class="name">{{name}}</span>
+                <span class="welcome">Welcome back</span> <span class="name">{{first}}</span>
             </a>
         </div>
         <div>

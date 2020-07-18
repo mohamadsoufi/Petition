@@ -10,8 +10,8 @@
     <div class="thanks-links">
 
         <a href="/thanks/delete">
-            {{!-- <input type="hidden" name="_csrf" value="{{csrfToken}}"> --}}
             <form action="/thanks/delete" method="POST">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <button>Delete your signature</button>
             </form>
         </a>
