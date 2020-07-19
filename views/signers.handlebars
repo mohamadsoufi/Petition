@@ -1,30 +1,35 @@
 <div class="signers-list">
     <h2>The {{data.length}} participants </h2>
-    <ul>
-        {{#data}}
-        <li>
+    <div class="ul-list">
 
-            {{#if url}}
+        <ul>
+            {{#data}}
+            <li>
 
-            <a href="{{url}}">{{first}} {{last}}</a>
-            {{else}}
+                {{#if url}}
 
-            {{first}} {{last}}
-            {{/if}}
+                <a href="{{url}}">{{first}} {{last}}</a>
 
-            {{#if age}}
-            {{age}}
-            {{/if}}
+                {{else}}
 
-            {{#if ../signersView}}
+                {{first}} {{last}}
+                {{/if}}
 
-            <a href="/signers/{{city}}">{{city}}</a>
+                {{#if age}}
+                {{age}}
+                {{/if}}
 
-            {{/if}}
+                {{#if ../signersView}}
 
-        </li>
+                <a href="/signers/{{city}}">{{city}}</a>
 
-        {{/data}}
+                {{/if}}
 
-    </ul>
+            </li>
+
+            {{/data}}
+
+        </ul>
+    </div>
+
 </div>
