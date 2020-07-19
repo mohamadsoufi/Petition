@@ -109,7 +109,7 @@ app.get("/profile", (req, res) => {
     });
 });
 
-app.post("/profile", function (req, res) {
+app.post("/profile", requireLoggedInUser, function (req, res) {
     let age = req.body.age;
     let url = req.body.url;
     let cityLower = req.body.city.toLowerCase();
@@ -125,7 +125,7 @@ app.post("/profile", function (req, res) {
         let userId = req.session.userId;
         db.addProfile(age, cityLower, url, userId)
             .then((results) => {
-                res.redirect("/petition");
+                res.redirect("/petition/cause");
             })
             .catch((err) => {
                 console.log("error in profile in POST", err);
@@ -392,10 +392,7 @@ app.get("/signers/:city", requireLoggedInUser, (req, res) => {
 app.get('/logout', requireLoggedInUser, function (req, res) {
     req.session = null;
 
-    res.render("login", {
-        layout: "main",
-        notSigned: true
-    })
+    res.redirect('login')
 })
 
 app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));

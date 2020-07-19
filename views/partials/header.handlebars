@@ -3,9 +3,12 @@
     <div class="right-side">
 
         {{#if first}}
+
+
         <div>
-            <a class="symbol" href="/petition">The Petition</a>
+            <a class="symbol" href="/petition/cause">My cause!</a>
         </div>
+
         <div>
             <a class="edit" href="/profile/edit">Edit</a>
         </div>
@@ -16,8 +19,8 @@
     </div>
     <div class="left-side">
         <div class="welcome-name">
-            <a class="signer" href="/thanks">
-                <span class="welcome">Welcome to the Petition</span> <span class="name">{{first}}</span>
+            <a class="signer" href="/petition">
+                <span class="name">{{first}}</span>
             </a>
         </div>
         <div>
@@ -26,8 +29,12 @@
     </div>
     {{else}}
     <div>
-        <a class="petition/cause" href="/petition/cause">My Cause!</a>
+        <a class="symbol" href="/signers">Signers</a>
     </div>
+    <div>
+        <a class="symbol" href="/petition/cause">My cause!</a>
+    </div>
+
     {{/if}}
 
 </nav>

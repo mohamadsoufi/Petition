@@ -15,7 +15,7 @@ nav {
     /* justify-content: center; */
     justify-content: space-between;
     flex-direction: row-reverse;
-    background-color: #00ab84;
+    background-color: #333;
 }
 .name {
     padding-left: 2px;
@@ -31,15 +31,11 @@ nav a {
 }
 
 .welcome {
-    color: black;
+    color: red;
     font-size: x-small;
 }
 nav a:hover,
 .welcome-name:hover {
-    color: black;
-}
-
-.welcome:hover {
     color: black;
 }
 
@@ -135,7 +131,7 @@ nav .left-side {
 }
 
 .cause-container a:hover {
-    color: rgba(88, 175, 161, 0.788);
+    color: #fff;
 }
 
 .sign {
@@ -160,7 +156,7 @@ nav .left-side {
 
 .cause-message {
     width: 50%;
-    background-color: rgba(0, 0, 0, 0.473);
+    background-color: rgba(0, 0, 0, 0.555);
     color: white;
     text-align: center;
 }
@@ -265,19 +261,20 @@ h3 {
     background-color: rgba(0, 0, 0, 0.068);
 }
 
-.canvas-image button {
+.canvas-image button,
+.delete-sig {
     border: none;
     outline: none;
     text-decoration: none;
     cursor: pointer;
     background: none;
     width: 150px;
-    color: black;
+    color: rgb(0, 0, 0);
     font-size: small;
 }
 .thanks-container a:hover,
 button:hover {
-    color: rgba(88, 175, 161, 0.788);
+    color: #fff;
 }
 
 .thanks-links a {
@@ -292,11 +289,7 @@ button:hover {
 }
 
 .thanks-links-container a {
-    background-color: rgba(0, 0, 0, 0.336);
-}
-
-.delete-sig {
-    background-color: none;
+    background-color: rgba(255, 255, 255, 0.404);
 }
 
 /* signers page*/
@@ -323,6 +316,7 @@ footer {
     position: relative;
     bottom: 0;
     left: 0;
-    background-color: rgba(15, 129, 15, 0.452);
+    background-color: #333;
     font-size: x-small;
+    color: #fff;
 }
