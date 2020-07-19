@@ -49,7 +49,7 @@ app.set("view engine", "handlebars");
 ////////////////////////
 
 app.get("/", (req, res) => {
-    res.redirect("/register");
+    res.redirect("/petition/cause");
 });
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
