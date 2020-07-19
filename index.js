@@ -32,6 +32,7 @@ app.use(express.static("public"));
 
 app.use(csurf());
 
+module.exports = { app }
 app.use(function (req, res, next) {
     res.setHeader("x-frame-options", "deny");
     res.locals.csrfToken = req.csrfToken();
@@ -41,7 +42,6 @@ app.use(function (req, res, next) {
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
-
 //////// ROUTES ////////
 
 ////////////////////////
@@ -394,5 +394,7 @@ app.get('/logout', requireLoggedInUser, function (req, res) {
 
     res.redirect('login')
 })
+if (require.main === module) {
 
-app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));
+    app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));
+}
