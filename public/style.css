@@ -1,8 +1,13 @@
 body {
     margin: 0;
     height: 100%;
-    font-family: sans-serif;
+    font-family: "Poppins", sans-serif;
     background-color: rgba(88, 175, 160, 0.075);
+}
+.content-container {
+    background-image: url(./pics/image1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 nav {
@@ -10,30 +15,28 @@ nav {
     /* justify-content: center; */
     justify-content: space-between;
     flex-direction: row-reverse;
-    background-color: rgba(88, 175, 161, 0.788);
+    background-color: #00ab84;
 }
-
-nav a {
-    text-decoration: none;
-    color: black;
-}
-
-.welcome {
-    color: black;
-}
-
 .name {
     padding-left: 2px;
     color: red;
 }
 
-nav a:hover,
-.welcome-name:hover {
+.name:hover {
+    color: black;
+}
+nav a {
+    text-decoration: none;
     color: white;
 }
 
-.name:hover {
-    color: rgb(255, 255, 255);
+.welcome {
+    color: black;
+    font-size: x-small;
+}
+nav a:hover,
+.welcome-name:hover {
+    color: black;
 }
 
 .welcome:hover {
@@ -43,6 +46,7 @@ nav a:hover,
 nav a {
     font-size: medium;
     padding: 0 10px 0 10px;
+    font-size: small;
 }
 
 nav .right-side {
@@ -80,28 +84,95 @@ nav .left-side {
     margin: 5px;
 }
 .content-container button {
-    margin-top: 10px;
+    border: none;
+    outline: none;
+    margin-top: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    text-decoration: underline;
 }
 
 .if-member {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 300px;
     margin: 10px;
 }
 
-.if-member h4 {
-    padding-right: 5px;
+.if-member h5 {
+    padding-top: 30px;
     margin: 0;
+}
+.if-member a:hover {
+    color: rgba(88, 175, 161, 0.788);
 }
 
 /* login */
+
+.content-container form {
+    padding: 20px;
+}
+
+/* .content-container a {
+} */
+
+/* cause */
+.cause-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(./pics/plant6.webp);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.cause-container a {
+    padding: 3px;
+}
+
+.cause-container a:hover {
+    color: rgba(88, 175, 161, 0.788);
+}
+
+.sign {
+    border: 1px solid black;
+    background-color: rgba(0, 0, 0, 0.082);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.cause-container button {
+    border: none;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    font-size: large;
+}
+
+.cause-container img {
+    height: 20px;
+}
+
+.cause-message {
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.473);
+    color: white;
+    text-align: center;
+}
 
 /* petition page */
 .main-content-container {
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    background-image: url(./pics/library.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 form {
@@ -132,26 +203,24 @@ form,
     align-items: center;
 }
 
-.signature-canvas {
-    border: 1px rgba(0, 0, 0, 0.418) solid;
-}
-.signature-canvas button {
-    border: none;
-    outline: none;
-    margin-top: 12px;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 30px;
-    background: linear-gradient(
-        71deg,
-        rgb(224, 217, 217) 10%,
-        rgba(67, 139, 127, 0.788) 95%,
-        rgba(43, 70, 65, 0.788) 100%
-    );
+.canvas-container {
+    background-color: rgba(0, 0, 0, 0.527);
 }
 
-button:hover {
-    color: rgb(85, 81, 81);
+.signature-canvas {
+    border: 2px rgba(0, 0, 0, 0.418) solid;
+}
+
+.form-submit {
+    border: none;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.527);
+    width: 150px;
+    color: rgb(255, 255, 255);
+    font-weight: 900;
+    font-size: small;
 }
 
 .err-msg {
@@ -161,6 +230,15 @@ button:hover {
 /* thanks page */
 .thanks-container {
     height: 100vh;
+    background-image: url(./pics/plant5.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.thanks-name-container h2,
+h3 {
+    color: gray;
+    text-decoration: rgb(0, 0, 0);
 }
 
 .cur-first {
@@ -170,6 +248,7 @@ button:hover {
 
 .thanks-name-container {
     display: flex;
+    justify-content: center;
 }
 
 .thanks-container,
@@ -181,46 +260,69 @@ button:hover {
     text-decoration: none;
     color: black;
 }
-.thanks-container a:hover,
-button:hover {
-    color: rgba(88, 175, 161, 0.788);
+
+.canvas-image {
+    background-color: rgba(0, 0, 0, 0.068);
 }
 
-.thanks-container button {
+.canvas-image button {
     border: none;
     outline: none;
     text-decoration: none;
     cursor: pointer;
     background: none;
     width: 150px;
+    color: black;
+    font-size: small;
+}
+.thanks-container a:hover,
+button:hover {
+    color: rgba(88, 175, 161, 0.788);
 }
 
 .thanks-links a {
-    /* border-bottom: solid black 1px; */
     text-decoration: underline;
     padding: 5px;
+    color: white;
+    font-size: small;
+}
+
+.thanks-links-container {
+    padding-top: 50px;
+}
+
+.thanks-links-container a {
+    background-color: rgba(0, 0, 0, 0.336);
+}
+
+.delete-sig {
+    background-color: none;
 }
 
 /* signers page*/
 .signers-list {
     height: 100vh;
-    margin: 20px;
+    background-image: url(./pics/plant1.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .signers-list,
 .signers-list ul {
     list-style-type: none;
     padding: 5px;
-
+    background-color: rgba(128, 128, 128, 0.288);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
+    font-size: small;
 }
-/* the ul is ganna touch the footer if it grows more!! */
 
 footer {
     position: relative;
     bottom: 0;
     left: 0;
-    background-color: rgba(88, 175, 161, 0.788);
+    background-color: rgba(15, 129, 15, 0.452);
+    font-size: x-small;
 }

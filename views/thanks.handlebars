@@ -2,21 +2,21 @@
     <div class="thanks-name-container">
 
         <h2>Thank you for participating </h2>
-        <h2 class="cur-first">{{curFirst}}</h2>
+
     </div>
-    <img src="{{canvPicURL}}" alt="canvPicURL">
+    <img class="canvas-image" src="{{canvPicURL}}" alt="canvPicURL">
 
     <h3>{{signersNum}} have signed. Next goal: 50,000</h3>
     <div class="thanks-links">
+        <div class="thanks-links-container">
 
-        <a href="/thanks/delete">
-            <form action="/thanks/delete" method="POST">
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button>Delete your signature</button>
-            </form>
-        </a>
-        <a href="/profile/edit">Edit your profile</a>
+            <a href="/thanks/delete">
+                <form action="/thanks/delete" method="POST">
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    <button class="delete-sig">Delete your signature</button>
+                </form>
+            </a>
 
-        <a href="/signers">Check list of signers!</a>
+        </div>
     </div>
 </div>

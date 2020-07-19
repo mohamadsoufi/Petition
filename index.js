@@ -80,8 +80,6 @@ app.post("/register", requireLoggedOutUser, requireNoSignature, (req, res) => {
         .then((hashedPw) => {
             db.addUser(userFirstName, userLastName, emailRegister, hashedPw)
                 .then((results) => {
-                    // console.log("results in addUser :", results);
-                    // console.log("results.id :", results.id);
                     let id = results.rows[0].id;
                     req.session.userId = id;
 
@@ -114,7 +112,6 @@ app.get("/profile", (req, res) => {
 app.post("/profile", function (req, res) {
     let age = req.body.age;
     let url = req.body.url;
-    // console.log('url in profile:', url);
     let cityLower = req.body.city.toLowerCase();
     if (!age && !url && !cityLower) {
         res.redirect("/petition")
@@ -125,12 +122,9 @@ app.post("/profile", function (req, res) {
         url.startsWith("//") ||
         !url
     ) {
-        // console.log("req.body :", req.body);
-        // console.log("url :", url);
         let userId = req.session.userId;
         db.addProfile(age, cityLower, url, userId)
             .then((results) => {
-                // console.log("results in add profile :", results);
                 res.redirect("/petition");
             })
             .catch((err) => {
@@ -249,7 +243,6 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
                 .then((matchValue) => {
                     if (matchValue) {
                         requireSignature
-
                         res.redirect("/thanks")
 
                     } else {
@@ -304,6 +297,12 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
             });
         });
 });
+
+app.get('/petition/cause', (req, res) => {
+    res.render('petitioncause', {
+        layout: 'main'
+    })
+})
 
 ////////////////////////////////////
 //////// THANKS/SIGNATURE /////////
