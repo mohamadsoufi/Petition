@@ -295,16 +295,19 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
 });
 
 app.get('/petition/cause', (req, res) => {
-    db.getProfileData(req.session.userId).then((results) => {
-
-        first = results.rows[0].first
+    if (req.session.userId) {
+        db.getProfileData(req.session.userId).then((results) => {
+            let first = results.rows[0].first
+            res.render('petitioncause', {
+                layout: 'main',
+                first
+            })
+        })
+    } else {
         res.render('petitioncause', {
             layout: 'main',
-            first
-
         })
-    })
-
+    }
 })
 
 ////////////////////////////////////
