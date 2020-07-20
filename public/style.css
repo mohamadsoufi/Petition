@@ -134,9 +134,19 @@ nav .left-side {
     background-color: rgba(128, 128, 128, 0.534);
 }
 
+.sign-petition-btn:hover {
+    color: #fff;
+}
+
+.cause-message {
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.555);
+    color: white;
+    text-align: center;
+}
 .cause-container a {
     padding: 3px;
-    color: black;
+    color: gray;
     font-weight: 800;
 }
 
@@ -164,11 +174,14 @@ nav .left-side {
     height: 20px;
 }
 
-.cause-message {
-    width: 50%;
+.cause-links,
+.cause-links a {
     background-color: rgba(0, 0, 0, 0.555);
-    color: white;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    color: gray;
 }
 
 /* petition page */
@@ -284,7 +297,7 @@ h3 {
 }
 .thanks-container a:hover,
 button:hover {
-    color: #fff;
+    color: gray;
 }
 
 .thanks-links a {

@@ -276,22 +276,31 @@ app.get("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
 app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     let signature = req.body.signature;
     let userId = req.session.userId;
-    db.addSig(signature, userId)
-        .then((results) => {
-            let id = results.rows[0].id;
-            req.session.signatureId = id;
-            req.session.signed = true
-            //come back here later!
+    if (!signature) {
+        res.redirect('./petition/cause')
+        console.log('signature :', signature);
+    } else {
 
-            res.redirect("/thanks");
-        })
-        .catch((err) => {
-            console.log("err in POST /addSig :", err);
-            res.render("petition", {
-                layout: "main",
-                err: "something went wrong",
+        db.addSig(signature, userId)
+            .then((results) => {
+
+                let id = results.rows[0].id;
+                req.session.signatureId = id;
+                req.session.signed = true
+                //come back here later!
+
+                res.redirect("/thanks");
+
+            })
+            .catch((err) => {
+                console.log("err in POST /addSig :", err);
+                res.render("petition", {
+                    layout: "main",
+                    err: "something went wrong",
+                });
             });
-        });
+    }
+
 });
 
 app.get('/petition/cause', (req, res) => {
