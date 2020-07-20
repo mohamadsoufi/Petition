@@ -28,21 +28,13 @@ nav {
 nav a {
     text-decoration: none;
     color: white;
+    padding: 0 10px 0 10px;
+    font-size: 15px;
 }
 
-.welcome {
-    color: red;
-    font-size: 10px;
-}
 nav a:hover,
 .welcome-name:hover {
     color: black;
-}
-
-nav a {
-    font-size: medium;
-    padding: 0 10px 0 10px;
-    font-size: 12px;
 }
 
 nav .right-side {
@@ -223,11 +215,11 @@ form,
 }
 
 .canvas-container {
-    background-color: rgba(0, 0, 0, 0.527);
+    background-color: rgba(150, 144, 144, 0.384);
 }
 
 .signature-canvas {
-    border: 2px rgba(0, 0, 0, 0.418) solid;
+    border: 2px rgba(0, 0, 0, 0.733) solid;
 }
 
 .form-submit {
@@ -239,7 +231,7 @@ form,
     width: 150px;
     color: rgb(255, 255, 255);
     font-weight: 900;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .err-msg {
