@@ -13,7 +13,7 @@ const {
 
 } = require("./middleware");
 const { hash, compare } = require("./bc");
-const redis = require('./ redis')
+
 const cookieSession = require("cookie-session");
 
 app.use(
@@ -128,7 +128,7 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
             })
             .catch((err) => {
                 console.log("error in profile in POST", err);
-                redirect('/petition/cause')
+                // redirect('/petition/cause')
             });
     } else {
         // check here later <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -141,7 +141,7 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
                     res.redirect("/petition");
                 })
                 .catch((err) => {
-                    console.log("error in profile in POST", err);
+                    console.log("error in profile in POST prepend", err);
                     res.render("profile", {
                         layout: "main",
                         err: "something went wrong",
@@ -295,9 +295,16 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
 });
 
 app.get('/petition/cause', (req, res) => {
-    res.render('petitioncause', {
-        layout: 'main'
+    db.getProfileData(req.session.userId).then((results) => {
+
+        first = results.rows[0].first
+        res.render('petitioncause', {
+            layout: 'main',
+            first
+
+        })
     })
+
 })
 
 ////////////////////////////////////
@@ -322,6 +329,7 @@ app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
                     signersNum,
                     canvPicURL,
                     first
+
                 });
             })
         })
@@ -344,24 +352,28 @@ app.post('/thanks/delete', requireLoggedInUser, requireSignature, function (req,
 //////// signers ////////
 ////////////////////////
 
-app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
-    db.getProfileData(req.session.userId).then((results) => {
-        first = results.rows[0].first
+app.get("/signers", requireLoggedInUser, (req, res) => {
+    let first
+    let data
+    db.getProfileData(req.session.userId).then((result) => {
+        first = result.rows[0].first
         db.getSigners()
             .then((results) => {
-                let data = results.rows;
-                // console.log('data signers :', data);
+                data = results.rows;
                 res.render("signers", {
                     layout: "main",
                     data,
                     first,
                     signersView: true
                 });
-            })
-    })
-        .catch((err) => {
-            console.log("err in GET /get signers :", err);
-        });
+            }).catch((err) => {
+                console.log("err in GET /get signers :", err);
+
+            });
+
+    }).catch((err) => {
+        console.log("err in GET /get profile data in signers :", err);
+    });
 
 
 });

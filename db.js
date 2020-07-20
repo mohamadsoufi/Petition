@@ -74,7 +74,7 @@ module.exports.updateProfile = function (age, city, url, userId) {
              VALUES($1, $2, $3, $4)
              ON CONFLICT(user_id)
              DO UPDATE SET age = $1, city = $2, url = $3`;
-    let params = [age, city, url, userId]
+    let params = [+age || null, city, url, userId]
     return db.query(q, params)
 }
 
@@ -98,9 +98,9 @@ module.exports.getSigners = function () {
     let q =
         `SELECT first, last, age, city, url
         FROM users 
-        LEFT JOIN signatures 
+        JOIN signatures 
         ON users.id = signatures.user_id 
-        LEFT JOIN user_profiles 
+        JOIN user_profiles 
         ON users.id = user_profiles.user_id`;
     return db.query(q);
 };

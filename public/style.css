@@ -32,7 +32,7 @@ nav a {
 
 .welcome {
     color: red;
-    font-size: x-small;
+    font-size: 10px;
 }
 nav a:hover,
 .welcome-name:hover {
@@ -42,7 +42,7 @@ nav a:hover,
 nav a {
     font-size: medium;
     padding: 0 10px 0 10px;
-    font-size: small;
+    font-size: 12px;
 }
 
 nav .right-side {
@@ -226,7 +226,7 @@ form,
     width: 150px;
     color: rgb(255, 255, 255);
     font-weight: 900;
-    font-size: small;
+    font-size: 12px;
 }
 
 .err-msg {
@@ -280,7 +280,7 @@ h3 {
     background: none;
     width: 150px;
     color: rgb(0, 0, 0);
-    font-size: small;
+    font-size: 12px;
 }
 .thanks-container a:hover,
 button:hover {
@@ -291,7 +291,7 @@ button:hover {
     text-decoration: underline;
     padding: 5px;
     color: white;
-    font-size: small;
+    font-size: 12px;
 }
 
 .thanks-links-container {
@@ -319,7 +319,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: small;
+    font-size: 12px;
 }
 
 .ul-list {
@@ -353,6 +353,6 @@ footer {
     bottom: 0;
     left: 0;
     background-color: #333;
-    font-size: x-small;
+    font-size: 10px;
     color: #fff;
 }
