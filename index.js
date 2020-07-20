@@ -13,7 +13,7 @@ const {
 
 } = require("./middleware");
 const { hash, compare } = require("./bc");
-
+const redis = require('./ redis')
 const cookieSession = require("cookie-session");
 
 app.use(
@@ -47,7 +47,6 @@ app.set("view engine", "handlebars");
 ////////////////////////
 //////// REGISTER ////////
 ////////////////////////
-
 app.get("/", (req, res) => {
     res.redirect("/petition/cause");
 });
@@ -114,7 +113,7 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
     let url = req.body.url;
     let cityLower = req.body.city.toLowerCase();
     if (!age && !url && !cityLower) {
-        res.redirect("/petition")
+        res.redirect("/petition/cause")
     }
     if (
         url.startsWith("https://") ||
@@ -129,10 +128,7 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
             })
             .catch((err) => {
                 console.log("error in profile in POST", err);
-                res.render("profile", {
-                    layout: "main",
-                    err: "something went wrong",
-                });
+                redirect('/petition/cause')
             });
     } else {
         // check here later <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -348,7 +344,7 @@ app.post('/thanks/delete', requireLoggedInUser, requireSignature, function (req,
 //////// signers ////////
 ////////////////////////
 
-app.get("/signers", requireLoggedInUser, (req, res) => {
+app.get("/signers", requireLoggedInUser, requireSignature, (req, res) => {
     db.getProfileData(req.session.userId).then((results) => {
         first = results.rows[0].first
         db.getSigners()
