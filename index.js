@@ -203,8 +203,12 @@ app.post('/profile/edit', requireLoggedInUser, function (req, res) {
         db.updateUsers(first, last, email, userId), db.updateProfile(age, city, url, userId)
 
     ]).then((results) => {
-        console.log('results :', results);
-        res.redirect('/thanks')
+
+        res.render('editprofile', {
+            layout: 'main',
+            done: 'Done!'
+        }
+        )
     }).catch((err) => {
         console.log('err in Promise.all :', err);
     })
@@ -293,7 +297,7 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
 
             })
             .catch((err) => {
-                console.log("err in POST /addSig :", err);
+                console.log("er`r in POST /addSig :", err);
                 res.render("petition", {
                     layout: "main",
                     err: "something went wrong",

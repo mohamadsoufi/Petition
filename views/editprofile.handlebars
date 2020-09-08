@@ -12,4 +12,7 @@
         <input type="text" value="{{url}}" name="url" placeholder="https://www.google.com/">
         <button class="update">Update</button>
     </form>
+    {{#if done}}
+    {{> message}}
+    {{/if}}
 </div>
