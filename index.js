@@ -158,7 +158,6 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
 app.get('/profile/edit', requireLoggedInUser, (req, res) => {
 
     db.getProfileData(req.session.userId).then((results) => {
-        // console.log('results in edit :', results);
         let first = results.rows[0].first
         let last = results.rows[0].last
         let age = results.rows[0].age
