@@ -10,7 +10,6 @@ const {
     requireLoggedInUser,
     requireSignature,
     requireNoSignature,
-
 } = require("./middleware");
 const { hash, compare } = require("./bc");
 
@@ -32,7 +31,7 @@ app.use(express.static("public"));
 
 app.use(csurf());
 
-module.exports = { app }
+module.exports = { app };
 app.use(function (req, res, next) {
     res.setHeader("x-frame-options", "deny");
     res.locals.csrfToken = req.csrfToken();
@@ -58,8 +57,12 @@ app.get("/register", requireLoggedOutUser, (req, res) => {
 });
 
 app.post("/register", requireLoggedOutUser, requireNoSignature, (req, res) => {
-    const userFirstName = req.body.userFirstName;
-    const userLastName = req.body.userLastName;
+    const userFirstName =
+        req.body.userFirstName.charAt(0).toUpperCase() +
+        req.body.userFirstName.slice(1);
+    const userLastName =
+        req.body.userLastName.charAt(0).toUpperCase() +
+        req.body.userLastName.slice(1);
     const emailRegister = req.body.emailRegister;
     const passwordRegister = req.body.passwordRegister;
 
@@ -86,7 +89,7 @@ app.post("/register", requireLoggedOutUser, requireNoSignature, (req, res) => {
                 })
                 .catch((err) => {
                     console.log("err in POST /addUser :", err);
-                    res.redirect('/register')
+                    res.redirect("/register");
                 });
         })
         .catch((err) => {
@@ -113,7 +116,7 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
     let url = req.body.url;
     let cityLower = req.body.city.toLowerCase();
     if (!age && !url && !cityLower) {
-        res.redirect("/petition/cause")
+        res.redirect("/petition/cause");
     }
     if (
         url.startsWith("https://") ||
@@ -133,7 +136,6 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
     } else {
         // check here later <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         if (url) {
-
             url.prepend("http://");
             db.addProfile(age, cityLower, url, userId)
                 .then((results) => {
@@ -155,15 +157,14 @@ app.post("/profile", requireLoggedInUser, function (req, res) {
 //////// EDIT ////////
 /////////////////////////
 
-app.get('/profile/edit', requireLoggedInUser, (req, res) => {
-
+app.get("/profile/edit", requireLoggedInUser, (req, res) => {
     db.getProfileData(req.session.userId).then((results) => {
-        let first = results.rows[0].first
-        let last = results.rows[0].last
-        let age = results.rows[0].age
-        let city = results.rows[0].city
-        let url = results.rows[0].url
-        let email = results.rows[0].email
+        let first = results.rows[0].first;
+        let last = results.rows[0].last;
+        let age = results.rows[0].age;
+        let city = results.rows[0].city;
+        let url = results.rows[0].url;
+        let email = results.rows[0].email;
         res.render("editprofile", {
             layout: "main",
             first,
@@ -171,55 +172,58 @@ app.get('/profile/edit', requireLoggedInUser, (req, res) => {
             age,
             city,
             url,
-            email
-        })
+            email,
+        });
+    });
+});
 
-    })
-})
-
-app.post('/profile/edit', requireLoggedInUser, function (req, res) {
-
-    let userId = req.session.userId
-    let first = req.body.userFirstName
-    let last = req.body.userLastName
-    let age = req.body.age
-    let city = req.body.city
-    let url = req.body.url
-    let email = req.body.emailRegister
-    let password = req.body.passwordRegister
+app.post("/profile/edit", requireLoggedInUser, function (req, res) {
+    let userId = req.session.userId;
+    let first =
+        req.body.userFirstName.charAt(0).toUpperCase() +
+        req.body.userFirstName.slice(1);
+    let last =
+        req.body.userLastName.charAt(0).toUpperCase() +
+        req.body.userLastName.slice(1);
+    let age = req.body.age;
+    let city = req.body.city.toLowerCase();
+    let url = req.body.url;
+    let email = req.body.emailRegister;
+    let password = req.body.passwordRegister;
     if (password) {
-        hash(password).then((hashedPw) => {
-            db.updatePw(hashedPw, userId).then(() => {
-            }).catch((err) => {
-                console.log('err in updatePw :', err);
+        hash(password)
+            .then((hashedPw) => {
+                db.updatePw(hashedPw, userId)
+                    .then(() => {})
+                    .catch((err) => {
+                        console.log("err in updatePw :", err);
+                    });
             })
-        }).catch((err) => {
-            console.log('err in hash :', err);
-        })
+            .catch((err) => {
+                console.log("err in hash :", err);
+            });
     }
 
     Promise.all([
-        db.updateUsers(first, last, email, userId), db.updateProfile(age, city, url, userId)
-
-    ]).then((results) => {
-
-        res.render('editprofile', {
-            layout: 'main',
-            done: 'Done!'
-        }
-        )
-    }).catch((err) => {
-        console.log('err in Promise.all :', err);
-    })
-
-})
+        db.updateUsers(first, last, email, userId),
+        db.updateProfile(age, city, url, userId),
+    ])
+        .then((results) => {
+            res.render("editprofile", {
+                layout: "main",
+                done: "Done!",
+            });
+        })
+        .catch((err) => {
+            console.log("err in Promise.all :", err);
+        });
+});
 
 ///////////////////////
 //////// LOGIN ////////
 ///////////////////////
 
 app.get("/login", requireLoggedOutUser, (req, res) => {
-
     res.render("login", {
         layout: "main",
     });
@@ -231,19 +235,18 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
 
     db.getUserIdSigId(emailLogin)
         .then((result) => {
-            let userId = result.rows[0].userid
-            let signatureId = result.rows[0].signatureid
-            let pw = result.rows[0].password
+            let userId = result.rows[0].userid;
+            let signatureId = result.rows[0].signatureid;
+            let pw = result.rows[0].password;
 
             req.session.userId = userId;
-            req.session.signatureId = signatureId
+            req.session.signatureId = signatureId;
 
             compare(passwordLogin, pw)
                 .then((matchValue) => {
                     if (matchValue) {
-                        requireSignature
-                        res.redirect("/thanks")
-
+                        requireSignature;
+                        res.redirect("/thanks");
                     } else {
                         res.render("login", {
                             layout: "main",
@@ -271,29 +274,25 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
 app.get("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     res.render("petition", {
         layout: "main",
-        petition: true
+        petition: true,
     });
 });
-
 
 app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
     let signature = req.body.signature;
     let userId = req.session.userId;
     if (!signature) {
-        res.redirect('./petition/cause')
-        console.log('signature :', signature);
+        res.redirect("./petition/cause");
+        console.log("signature :", signature);
     } else {
-
         db.addSig(signature, userId)
             .then((results) => {
-
                 let id = results.rows[0].id;
                 req.session.signatureId = id;
-                req.session.signed = true
+                req.session.signed = true;
                 //come back here later!
 
                 res.redirect("/thanks");
-
             })
             .catch((err) => {
                 console.log("er`r in POST /addSig :", err);
@@ -303,121 +302,122 @@ app.post("/petition", requireLoggedInUser, requireNoSignature, (req, res) => {
                 });
             });
     }
-
 });
 
-app.get('/petition/cause', (req, res) => {
+app.get("/petition/cause", (req, res) => {
     if (req.session.userId) {
         db.getProfileData(req.session.userId).then((results) => {
-            let first = results.rows[0].first
-            res.render('petitioncause', {
-                layout: 'main',
-                first
-            })
-        })
+            let first = results.rows[0].first;
+            res.render("petitioncause", {
+                layout: "main",
+                first,
+            });
+        });
     } else {
-        res.render('petitioncause', {
-            layout: 'main',
-        })
+        res.render("petitioncause", {
+            layout: "main",
+        });
     }
-})
+});
 
 ////////////////////////////////////
 //////// THANKS/SIGNATURE /////////
 //////////////////////////////////
 
 app.get("/thanks", requireLoggedInUser, requireSignature, (req, res) => {
-    let first
-    db.getProfileData(req.session.userId).then((results) => {
-
-        first = results.rows[0].first
-    }).catch((err) => {
-        console.log("err in GET /get profile data in thanks :", err);
-    });
+    let first;
+    db.getProfileData(req.session.userId)
+        .then((results) => {
+            first = results.rows[0].first;
+        })
+        .catch((err) => {
+            console.log("err in GET /get profile data in thanks :", err);
+        });
     db.getSig(req.session.userId)
         .then((results) => {
             let canvPicURL = results.rows[0].signature;
             db.getNum().then((results) => {
-                let signersNum = results.rows[0].count
+                let signersNum = results.rows[0].count;
                 res.render("thanks", {
                     layout: "main",
                     signersNum,
                     canvPicURL,
-                    first
-
+                    first,
                 });
-            })
+            });
         })
         .catch((err) => {
             console.log("err in GET /getSig :", err);
         });
 });
 
-app.post('/thanks/delete', requireLoggedInUser, requireSignature, function (req, res) {
+app.post("/thanks/delete", requireLoggedInUser, requireSignature, function (
+    req,
+    res
+) {
     db.deleteSig(req.session.userId).then(() => {
-        req.session.signatureId = null
-        res.redirect('/petition')
-    })
+        req.session.signatureId = null;
+        res.redirect("/petition");
+    });
 
     // res.send('POST request to delete')
-
-})
+});
 
 /////////////////////////
 //////// signers ////////
 ////////////////////////
 
 app.get("/signers", requireLoggedInUser, (req, res) => {
-    let first
-    let data
-    db.getProfileData(req.session.userId).then((result) => {
-        first = result.rows[0].first
-        db.getSigners()
-            .then((results) => {
-                data = results.rows;
+    let first;
+    let data;
+    db.getProfileData(req.session.userId)
+        .then((result) => {
+            first = result.rows[0].first;
+            db.getSigners()
+                .then((results) => {
+                    data = results.rows;
+                    res.render("signers", {
+                        layout: "main",
+                        data,
+                        first,
+                        signersView: true,
+                    });
+                })
+                .catch((err) => {
+                    console.log("err in GET /get signers :", err);
+                });
+        })
+        .catch((err) => {
+            console.log("err in GET /get profile data in signers :", err);
+        });
+});
+
+app.get("/signers/:city", requireLoggedInUser, (req, res) => {
+    let city = req.params.city;
+    db.getProfileData(req.session.userId)
+        .then((results) => {
+            first = results.rows[0].first;
+            db.getSignersInCity(city).then((results) => {
+                let data = results.rows;
                 res.render("signers", {
                     layout: "main",
                     data,
                     first,
-                    signersView: true
                 });
-            }).catch((err) => {
-                console.log("err in GET /get signers :", err);
-
             });
-
-    }).catch((err) => {
-        console.log("err in GET /get profile data in signers :", err);
-    });
-
-
-});
-
-app.get("/signers/:city", requireLoggedInUser, (req, res) => {
-
-    let city = req.params.city
-    db.getProfileData(req.session.userId).then((results) => {
-
-        first = results.rows[0].first
-        db.getSignersInCity(city).then((results) => {
-            let data = results.rows;
-            res.render("signers", {
-                layout: "main",
-                data,
-                first,
-            })
         })
-    }).catch((err) => {
-        console.log("err in GET /get city :", err);
-    });
+        .catch((err) => {
+            console.log("err in GET /get city :", err);
+        });
 });
 
-app.get('/logout', requireLoggedInUser, function (req, res) {
+app.get("/logout", requireLoggedInUser, function (req, res) {
     req.session = null;
 
-    res.redirect('login')
-})
+    res.redirect("login");
+});
 if (require.main === module) {
-
-    app.listen(process.env.PORT || port, () => console.log(`Example app listening on port ${port}!`));
+    app.listen(process.env.PORT || port, () =>
+        console.log(`Example app listening on port ${port}!`)
+    );
 }

@@ -1,11 +1,5 @@
 # Petition
 
-## Note
-___
-
-Prior to running the project, please ensure that you npm install all dependencies in order to successfully run the project on your computer.
-
-
 
 #### npm start
 
